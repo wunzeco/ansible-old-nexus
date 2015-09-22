@@ -6,7 +6,7 @@
   get_url: url={{ nexus_artifact_url }} dest=/tmp/{{ nexus_artifact }}
 
 - name: Decompress nexus OSS artifact
-  unarchive: src=/tmp/{{ nexus_artifact }} dest={{ nexus_install_dir | dirname }} owner={{ nexus_user }} group={{ nexus_group }} copy=no
+  unarchive: src=/tmp/{{ nexus_artifact }} dest={{ nexus_install_dir|dirname }} owner={{ nexus_user }} group={{ nexus_group }} copy=no
   notify: Restart nexus
 
 - name: Create symlink to nexus installation directory 
