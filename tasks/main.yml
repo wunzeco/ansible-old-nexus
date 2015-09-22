@@ -1,0 +1,23 @@
+---
+- name: Create nexus group
+  group: name={{ nexus_group }}
+
+- name: Create nexus user
+  user: name={{ nexus_user }} group={{ nexus_group }} shell=/bin/bash home={{ nexus_home_dir }} createhome=no 
+
+- name: Create nexus pid directory
+  file: path=/var/run/nexus owner={{ nexus_user }} group={{ nexus_group }} mode=0755 state=directory
+
+- name: Ensure parent directory of nexus install directory exists
+  file: path={{ nexus_install_dir | dirname }} owner=root group=root mode=0755 state=directory
+
+- name: Check if nexus is already installed
+  stat: path={{ nexus_install_dir }}
+  register: install_dir
+
+- name: Skip nexus installation if the correct version is already installed
+  set_fact: nexus_skip_install=true
+  when: (install_dir.stat.isdir is defined and install_dir.stat.isdir) and not nexus_force_install
+
+- include: install.yml
+  when: not nexus_skip_install
