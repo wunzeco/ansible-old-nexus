@@ -24,6 +24,9 @@
 - name: Update PIDDIR environment variable in startup script
   lineinfile: dest=/etc/init.d/nexus regexp='^#PIDDIR=' line='PIDDIR="{{ nexus_pid_dir }}"'
 
+- name: Create nexus pid directory
+  file: path={{ nexus_pid_dir }} owner={{ nexus_user }} group={{ nexus_group }} mode=0755 state=directory
+
 - name: Ensure nexus startup script has correct permissions
   file: path=/etc/init.d/nexus owner=root group=root mode=0755 state=file
 
